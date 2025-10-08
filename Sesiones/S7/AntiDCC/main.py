@@ -1,43 +1,55 @@
 import sys
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton
 from frontend.frontend_client import VentanaCliente
 from frontend.frontend_admin import VentanaAdmin
 from backend.backend import LogicaBackend
 
+class MenuPrincipal(QWidget):
+    def __init__(self, cliente, admin):
+        super().__init__()
+        self.setWindowTitle("Menú Principal - Sistema de Votaciones")
+        layout = QVBoxLayout()
+        self.boton_cliente = QPushButton("Abrir Ventana de Votación (Cliente)")
+        self.boton_admin = QPushButton("Abrir Ventana de Administración")
+        layout.addWidget(self.boton_cliente)
+        layout.addWidget(self.boton_admin)
+        self.setLayout(layout)
+
+        # TODO ESTUDIANTE 1: Conectar botón cliente
+        self.boton_cliente.clicked.connect(lambda: self.abrir_submenu(cliente))
+        # TODO ESTUDIANTE 4: Conectar botón admin
+        self.boton_admin.clicked.connect(lambda: self.abrir_submenu(admin))
+
+    def abrir_submenu(self, ventana):
+        print(f"Menú: Abriendo ventana {ventana.windowTitle()}")
+        ventana.show()
+
 if __name__ == '__main__':
-    # Configuración de hook para capturar excepciones de PyQt5 (útil para debugging)
     def hook(type, value, traceback):
-        print(type)
+        print("Excepción capturada:", type, value)
         print(traceback)
-    sys.__excepthook__ = hook
+    sys.excepthook = hook
 
     app = QApplication(sys.argv)
+    print("Main: Creando backend y ventanas.")
 
-    # 1. Crear el Backend (Lógica)
     logica = LogicaBackend()
-
-    # 2. Crear los Frontends (Interfaces)
     cliente = VentanaCliente()
     admin = VentanaAdmin()
 
-    # 3. Conexiones Cliente (Front-end) <-> Backend
-    # Cliente (emite voto) -> Backend (recibe voto)
+    # Conexiones Cliente <-> Backend
     cliente.senal_votar.connect(logica.recibir_voto)
-    
-    # 4. Conexiones Admin (Front-end) <-> Backend
-    # Admin (pide conteo) -> Backend (inicia hilo)
+
+    # Conexiones Admin <-> Backend
     admin.senal_iniciar_conteo.connect(logica.iniciar_conteo)
 
-    # 5. Conexiones Backend (Lógica) <-> Admin (Front-end)
-    # 5a. Conexión de la señal asíncrona (desde el thread) al slot de la GUI
-    # Backend (emite resultados) -> Admin (actualiza GUI)
-    logica.senal_resultado_conteo.connect(admin.actualizar_conteo) 
-    
-    # 5b. Conexión de señales de estado del hilo
+    # Backend -> Admin (resultados)
+    logica.senal_resultado_conteo.connect(admin.actualizar_conteo)
     logica.senal_conteo_iniciado.connect(admin.mostrar_conteo_iniciado)
     logica.senal_conteo_finalizado.connect(admin.mostrar_conteo_finalizado)
-    
-    cliente.show()
-    admin.show()
 
+    menu = MenuPrincipal(cliente, admin)
+    menu.show()
+
+    print("Main: Lanzando aplicación.")
     sys.exit(app.exec_())
