@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (QDialog, QWidget, QLabel, QPushButton, QApplication
 class VotesWindow(QWidget):
     # TODO: crea una señal llamada sig_votos que emita el nombre del candidato seleccionado
 
+    sig_votos = pyqtSignal(str)
     def __init__(self, parent=None) -> None:
         # TODO: Recuerda añadir la lógica para que un usuario no pueda votar más de una vez
 
@@ -41,14 +42,26 @@ class VotesWindow(QWidget):
         #       para que se vea como en el enunciado para cada candidato.
         """
 
-        # ...
+        self.setWindowTitle("Votaciones Pangüin't")
 
+        main_vbox = QVBoxLayout()
+
+        titulo = QLabel('AntiDCC Conteo de Votos')
+        titulo.setAlignment(Qt.AlignCenter)
+        mensaje_generico = QLabel('Vota por tu candidato preferido ~')
+        mensaje_generico.setAlignment(Qt.AlignCenter)
+
+        main_vbox.addWidget(titulo)
+        main_vbox.addWidget(mensaje_generico)
         # CANDIDATOS
         ## Candidato <Flip Flop>
+        flipflop = self.create_candiate_box("Flip Flop", "resources/01.png")
+        main_vbox.addLayout(flipflop)
 
 
         ## Candidato <Los 3 Mishqueteros>
-
+        los_3_mishqueteros = self.create_candiate_box("Los 3 Mishqueteros", "resources/02.png")
+        main_vbox.addLayout(los_3_mishqueteros)
 
         # -------------------------------------------------
 
@@ -65,13 +78,34 @@ class VotesWindow(QWidget):
 
 
         # TODO: Botón volver
+        boton_regresar = QPushButton("Regresar")
+        boton_regresar.clicked.connect(self.return_to_welcome)
+        main_vbox.addWidget(boton_regresar)
+        
+        self.setLayout(main_vbox)
+        
 
-
-        self.setLayout(...)
 
     def center(self):
-        # TODO: usen la función usada en welcome.py
-        ...
+        width, height = QDesktopWidget().availableGeometry().width(), QDesktopWidget().availableGeometry().height()
+        width_real = (width - 400) // 2
+        height_real = (height - 200) // 2
+        self.move(width_real, height_real)
+
+    
+    def create_candiate_box(self, nombre, path) -> QVBoxLayout:
+        vbox = QVBoxLayout()
+        imagen = QLabel()
+        imagen.setPixmap(QPixmap(self.tlp(path)))
+        imagen.setFixedSize(100, 100)
+    
+        btn = QPushButton(nombre)
+
+        vbox.addWidget(imagen)
+        vbox.addWidget(btn)
+
+        # btn.clicked.connect())
+        return vbox
 
 
     def popup_msg(self) -> None:
@@ -107,7 +141,8 @@ class VotesWindow(QWidget):
         # TODO: Crea una funcion que permita regresar a la ventana de bienvenida
         Se devuelve a la ventana de bienvenida
         """
-        ...
+        if self.parent is not None:
+            self.parent.show()
         self.close()
 
 
