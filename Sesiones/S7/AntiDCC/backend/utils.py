@@ -1,12 +1,5 @@
 import requests
 
-URL = "https://tutor-iic2233.jjsm.science/iic/votes"
-CANDIDATES = ["Flip Flop", "Los 3 Mishqueteros", "IIC2233.pop()", "y Perry?"]
-BASE_PAYLOAD = {
-    "candidate_ids": CANDIDATES,
-    "interval": 3
-}
-
 
 def get_external_votes() -> dict:
     """
@@ -14,9 +7,12 @@ def get_external_votes() -> dict:
     {"votes": {"Flip Flop": 3, ...}}
     En caso de error, retorna {"votes": {}}.
     """
+
+    # TODO: Completar
     try:
-        resp = requests.post(URL, json=BASE_PAYLOAD, timeout=5)
-        data = resp.json()
+        response = ...
+        data = ...
+
         print("[utils.get_external_votes] API:", data)
         if not isinstance(data, dict):
             return {"votes": {}}
