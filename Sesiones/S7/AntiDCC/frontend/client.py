@@ -16,16 +16,8 @@ class VotesWindow(QWidget):
         super().__init__()
         self.parent: QWidget = parent
         self.init_gui()
+        self.voto = False
 
-
-    def tlp(self, path: str) -> str:
-        """
-        Esta funcion les permitira testear desde este archivo o desde main para cargar las imagenes
-        """
-        if self.parent is not None:
-            # from main
-            return os.path.join('frontend', path)
-        return path
 
     def init_gui(self) -> None:
         """
@@ -55,13 +47,42 @@ class VotesWindow(QWidget):
         main_vbox.addWidget(mensaje_generico)
         # CANDIDATOS
         ## Candidato <Flip Flop>
-        flipflop = self.create_candiate_box("Flip Flop", "resources/01.png")
-        main_vbox.addLayout(flipflop)
+        main_hbox = QHBoxLayout()
+
+        left_vbox = QVBoxLayout()
+        flipflop = self.create_candiate_box("Flip Flop", "01")
+        left_vbox.addLayout(flipflop)
 
 
         ## Candidato <Los 3 Mishqueteros>
-        los_3_mishqueteros = self.create_candiate_box("Los 3 Mishqueteros", "resources/02.png")
-        main_vbox.addLayout(los_3_mishqueteros)
+        los_3_mishqueteros = self.create_candiate_box("Los 3 Mishqueteros", "02")
+        left_vbox.addLayout(los_3_mishqueteros)
+
+        main_hbox.addLayout(left_vbox)
+
+        
+        segundo_hbox = QVBoxLayout()
+
+        vertical_izq = QVBoxLayout()
+        vertical_der = QVBoxLayout()
+
+        caja_1_izq = self.create_candiate_box('Candidato 1', '03')
+
+        caja_1_der = self.create_candiate_box('Candidato 2', '04')
+
+        
+        vertical_izq.addLayout(caja_1_izq)
+
+        vertical_der.addLayout(caja_1_der)
+
+        segundo_hbox.addLayout(vertical_izq)
+        segundo_hbox.addLayout(vertical_der)
+        
+
+        main_hbox.addLayout(segundo_hbox)
+
+        main_vbox.addLayout(main_hbox)
+        
 
         # -------------------------------------------------
 
@@ -95,16 +116,20 @@ class VotesWindow(QWidget):
     
     def create_candiate_box(self, nombre, path) -> QVBoxLayout:
         vbox = QVBoxLayout()
+        hbox_image = QHBoxLayout()
         imagen = QLabel()
-        imagen.setPixmap(QPixmap(self.tlp(path)))
+        imagen.setPixmap(QPixmap(f'frontend/resources/{path}.png'))
+        imagen.setScaledContents(True)
         imagen.setFixedSize(100, 100)
     
         btn = QPushButton(nombre)
 
-        vbox.addWidget(imagen)
+        hbox_image.addWidget(imagen)
+        vbox.addLayout(hbox_image)
         vbox.addWidget(btn)
 
-        # btn.clicked.connect())
+        btn.clicked.connect(lambda: self.manage_voting(nombre))
+        
         return vbox
 
 
@@ -150,7 +175,21 @@ class VotesWindow(QWidget):
         # TODO: Recuerda añadir la lógica para que un usuario no pueda votar más de una vez
         # TODO: Emite la señal sig_votos con el nombre del candidato seleccionado
         # Si ya votó invoca self.error_msg(), sino invoca self.popup_msg()
-        ...
+        if self.voto:
+            self.error_msg()
+        else:
+            self.voto = True
+            self.sig_votos.emit(candidate)
+            self.popup_msg()
+
+    def tlp(self, path: str) -> str:
+        """
+        Esta funcion les permitira testear desde este archivo o desde main para cargar las imagenes
+        """
+        if self.parent is not None:
+            # from main
+            return os.path.join('', path)
+        return path
 
 if __name__ == '__main__':
     def hook(type, value, traceback) -> None:
