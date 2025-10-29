@@ -4,14 +4,13 @@ import sys
 
 from cliente.utils import Mensaje
 
-
 class Cliente:
     def __init__(self, host: str, port: int) -> None:
         self.host = host
         self.port = port
 
         # TODO: Parte II
-        self.socket = 'Completar'
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         self.acciones = {
             'consultar_deudas': self.pedir_consultar_deudas,
@@ -32,6 +31,8 @@ class Cliente:
         Conecta el cliente al servidor
         '''
         # TODO: Parte II
+        address = (self.host, self.port)
+        self.socket.connect(address)
         print('[Cliente] Conectado al servidor.')
 
     def manejar_flujo(self) -> None:
@@ -61,13 +62,21 @@ class Cliente:
         '''
         Transforma el mensaje a bytes y lo envía al servidor.
         '''
-        # TODO: Parte III
+        serial_msg = pickle.dumps(mensaje.__str__())
+        self.socket.send(serial_msg)
+
+        return serial_msg
 
     def recibir_mensaje(self) -> Mensaje:
         '''
         Recibe el mensaje y lo retorna.
         '''
-        # TODO: Parte III
+        # TODO: Parte III Test
+        incoming_msg = self.socket.recv(8192)
+        msg_data = pickle.loads(incoming_msg)
+        print(msg_data)
+        msg = Mensaje(msg_data).__str__()
+        return msg
 
     def pedir_accion(self) -> str:
         '''

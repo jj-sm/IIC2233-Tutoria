@@ -16,7 +16,7 @@ class Servidor:
         self.port = port
 
         # TODO: Parte II
-        self.socket_servidor = 'Completar'
+        self.socket_servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         self.clientes = {}
         self.contador_clientes = 0
@@ -44,7 +44,9 @@ class Servidor:
         Asocia el servidor al host y port dado.
         Habilita el servidor para recibir conexiones.
         '''
-        # TODO: Parte II
+        # TODO: Parte II Test
+        self.socket_servidor.bind((self.host, self.port))
+        self.socket_servidor.listen(10)
         print(f'[Servidor] Escuchando en {self.host} : {self.port}')
 
     def aceptar_clientes(self) -> None:
@@ -57,6 +59,11 @@ class Servidor:
             self.contador_clientes += 1
 
             # TODO: Parte II
+            # client = dict{
+            #     id_cliente: (client_socket, client_addr),
+            # }
+            client_socket, client_addr = self.socket_servidor.accept()
+            self.clientes[id_cliente] = (client_socket, client_addr)
 
             thread_cliente = Thread(
                 target=self.manejar_flujo_cliente,
@@ -90,6 +97,12 @@ class Servidor:
         Recibe el mensaje y lo retorna
         '''
         # TODO: Parte III
+        client_socket, _ = self.clientes[id_cliente]
+        msg = client_socket.recv(8192)
+        decoded_msg = pickle.loads(msg)
+        final_msg = Mensaje(decoded_msg).__str__()
+
+        return final_msg
 
     def procesar_mensaje_cliente(self, solicitud: Mensaje) -> Any:
         '''
@@ -113,12 +126,19 @@ class Servidor:
         Transforma el mensaje a bytes y lo envía al cliente
         '''
         # TODO: Parte III
+        client_socket, _ = self.clientes[id_cliente]
+        pk_msg = pickle.dumps(mensaje)
+        client_socket.send(pk_msg)
+
+        return pk_msg
 
     def desconectar_cliente(self, id_cliente: int) -> None:
         '''
         Cierra el socket de un cliente y lo saca del diccionario de clientes.
         '''
         # TODO: Parte II
+        client_socket, _ = self.clientes[id_cliente]
+        client_socket.close()
         del self.clientes[id_cliente]
         print(f'[Cliente {id_cliente}] Cliente desconectado')
 
@@ -135,13 +155,18 @@ class Servidor:
         '''
         Carga el contenido del archivo de transacciones.
         '''
-        # TODO: Parte I
+        with open(self.path_transacciones, 'r', encoding='utf-8') as f:
+            self.transacciones = json.load(f)
 
     def guardar_transacciones(self) -> None:
         '''
         Guarda el contenido del archivo de transacciones.
         '''
-        # TODO: Parte I
+        with open(self.path_transacciones, 'w', encoding='utf-8') as f:
+            data = json.dumps(self.transacciones, indent=4)
+            f.write(data)
+
+
 
     def consultar_deudas(self, usuario: str) -> dict:
         '''
