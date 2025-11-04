@@ -8,7 +8,17 @@ class Clock(QLabel):
         self.initialize()
 
     def initialize(self):
-        pass
+        self.setMinimumSize(150, 50)
+        self.setStyleSheet(self.custom_style())
+        self.setText("00:00:00")
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000) 
+        self.update_time()
+
+    def update_time(self):
+        current_time = QTime.currentTime().toString("hh:mm:ss")
+        self.setText(current_time)
 
     def custom_style(self):
         return f"""
