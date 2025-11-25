@@ -13,66 +13,65 @@
 	// 	"description": "Log output to console"
 	// }
 	"Centered Image with Size": {
-	"prefix": ".himg",
-	"body": [
-		"<div style=\"text-align: center\">",
-		"  <img src=\"https://jj-sm.github.io/UC-MAT1203L/images/${1:filename.jpg}\" width=\"${2:500}\" alt=\"${1}\"/>",
-		"</div>"
-	],
-	"description": "Centered image with customizable filename and size"
+		"prefix": ".himg",
+		"body": [
+			"<div style=\"text-align: center\">",
+			"  <img src=\"Resources/${1:filename.jpg}\" width=\"${2:500}\" alt=\"${1}\"/>",
+			"</div>"
+		],
+		"description": "Centered image with customizable filename and size"
 	},
 	"UC Image Markdown": {
-	"prefix": ".img",
-	"body": [
-		"![${1:filename}](https://jj-sm.github.io/UC-MAT1203L/images/${1})"
-	],
-	"description": "Insert UC course image with filename"
+		"prefix": ".img",
+		"body": [
+			"![${1:filename}](https://jj-sm.github.io/UC-MAT1203L/images/${1})"
+		],
+		"description": "Insert UC course image with filename"
 	}
 	"Success Alert": {
 		"prefix": ".success",
 		"body": [
-		"<div class=\"alert alert-block alert-success\">",
-		"  <b>${1:Success}:</b> ${2:This is a success alert.}",
-		"</div>"
+			"<div class=\"alert alert-block alert-success\">",
+			"  <b>${1:Success}:</b> ${2:This is a success alert.}",
+			"</div>"
 		],
 		"description": "Green success alert box"
 	},
 	"Danger Alert": {
 		"prefix": ".danger",
 		"body": [
-		"<div class=\"alert alert-block alert-danger\">",
-		"  <b>${1:Error}:</b> ${2:Something went wrong.}",
-		"</div>"
+			"<div class=\"alert alert-block alert-danger\">",
+			"  <b>${1:Error}:</b> ${2:Something went wrong.}",
+			"</div>"
 		],
 		"description": "Red danger alert box"
 	},
 	"Info Alert": {
 		"prefix": ".info",
 		"body": [
-		"<div class=\"alert alert-block alert-info\">",
-		"  <b>Info:</b> ${1:This is an informational message.}",
-		"</div>"
+			"<div class=\"alert alert-block alert-info\">",
+			"  <b>Info:</b> ${1:This is an informational message.}",
+			"</div>"
 		],
 		"description": "Blue info alert box"
 	},
 	"Warning Alert": {
 		"prefix": ".wan",
 		"body": [
-		"<div class=\"alert alert-block alert-warning\">",
-		"  <b>${1:Warning}:</b> ${2:Be careful with this step.}",
-		"</div>"
+			"<div class=\"alert alert-block alert-warning\">",
+			"  <b>${1:Warning}:</b> ${2:Be careful with this step.}",
+			"</div>"
 		],
 		"description": "Yellow warning alert box"
 	}	 
 	"Answer Block": {
 		"prefix": ".answer",
 		"body": [
-		"<details>",
-		"  <summary>Respuesta</summary>",
-		"  ${1:}",
-		"</details>"
+			"<details>",
+			"  <summary>Respuesta</summary>",
+			"  ${1:}",
+			"</details>"
 		],
 		"description": "Styled answer block"
 	}
-
 }

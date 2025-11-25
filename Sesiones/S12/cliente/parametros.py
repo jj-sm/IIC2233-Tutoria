@@ -3,7 +3,7 @@
 
 # --- Conexión ---
 # Usamos localhost (127.0.0.1) para pruebas locales.
-HOST = "127.0.0.1"
+HOST = "172.20.10.15"
 PORT = 3490
 
 # --- Encriptación ---
